@@ -1,4 +1,4 @@
-const CACHE_NAME = "offenbarung-lernspiel-v39";
+const CACHE_NAME = "offenbarung-lernspiel-v40";
 
 const FILES_TO_CACHE = [
   "/Offenbarung-Lernspiel/",
