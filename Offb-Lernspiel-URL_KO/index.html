@@ -29,9 +29,31 @@ body{min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .long{font-size:clamp(8px,.92vw,15px)}
 .instruction{width:min(1536px,100vw);padding:9px 10px 13px;background:#fff;color:#444;text-align:center;font-size:clamp(11px,1.3vw,15px)}
 .instruction strong{color:#7a2222}
+.back-button{
+  position:fixed;
+  top:6px;
+  left:500px;
+  z-index:9999;
+  padding:10px 12px;
+  border-radius:10px;
+  background:#ffffff;
+  color:#222222;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:500;
+  box-shadow:0 3px 10px rgba(0,0,0,.15);
+  border:1px solid #dddddd;
+}
+
+.back-button:active{
+  transform:scale(.97);
+}
 </style>
 </head>
 <body>
+
+<a href="../" class="back-button">❀ 메인 메뉴 ❀</a>
+  
 <div class="topbar">
   <div class="title">📖 요한계시록 학습 게임</div>
   <div class="score">정답: <span id="right">0</span>　오답: <span id="wrong">0</span></div>
