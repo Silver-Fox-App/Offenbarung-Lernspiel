@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffffff">
+<title>Offenbarungs-Lernspiel</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#f3f3f3;font-family:Arial,"Noto Sans",sans-serif}
+body{min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.topbar{
+  width:min(1536px,100vw);
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:8px 12px;background:#fff;position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 8px rgba(0,0,0,.08)
+}
+.title{font-size:clamp(15px,2vw,23px);font-weight:800}
+.score{font-size:clamp(12px,1.45vw,17px);white-space:nowrap}
+#resetBtn{
+  display:none;border:1px solid #aaa;border-radius:10px;background:#fff;color:#222;
+  padding:8px 12px;font-size:clamp(12px,1.45vw,16px);font-weight:800;cursor:pointer
+}
+#resetBtn.show{display:inline-block}
+.board-wrap{width:min(1536px,100vw)}
+.board{
+  position:relative;width:100%;aspect-ratio:1536/862;
+  background:#fff url("vorlage.png") center/100% 100% no-repeat;
+  overflow:hidden
+}
+
+/* Every field is transparent at the start, so the white template boxes remain visible. */
+.answer-field{
+  position:absolute;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:5px 8px;
+  border:0;
+  outline:none;
+  background:transparent;
+  color:#202020;
+  font-family:Arial,"Noto Sans",sans-serif;
+  font-weight:700;
+  font-size:clamp(10px,1.2vw,18px);
+  line-height:1.15;
+  white-space:pre-wrap;
+  overflow:hidden;
+  overflow-wrap:anywhere;
+  word-break:normal;
+  cursor:text;
+  user-select:text;
+}
+.answer-field:focus{
+  background:rgba(255,255,255,.75);
+}
+.answer-field.wrong{
+  background:rgba(249,218,218,.96);
+  color:#7a2222;
+}
+.answer-field.correct{
+  background:rgba(220,244,224,.96);
+  color:#1f5d2a;
+}
+.answer-field.revealed{
+  background:rgba(255,238,204,.97);
+  color:#6f4700;
+}
+.answer-field.locked{
+  cursor:default;
+}
+
+.vertical{
+  padding:4px;
+}
+.vertical.rotated{
+  transform:rotate(-90deg);
+  transform-origin:center center;
+}
+
+.small{font-size:clamp(8px,1.0vw,15px)}
+.tiny{font-size:clamp(8px,.88vw,14px)}
+
+.instruction{
+  width:min(1536px,100vw);
+  padding:9px 10px 13px;
+  background:#fff;
+  color:#444;
+  text-align:center;
+  font-size:clamp(11px,1.3vw,15px)
+}
+.instruction strong{color:#7a2222}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="title">📖 Offenbarungs-Lernspiel</div>
+  <div class="score">Richtig: <span id="right">0</span>　Falsch: <span id="wrong">0</span></div>
+  <button id="resetBtn" type="button">🔄 Neu starten (Reset)</button>
+</div>
+
+<div class="board-wrap">
+<div class="board">
+
+<div class="answer-field" id="f1" contenteditable="true" data-answer="Jesus"></div>
+
+<div class="answer-field" id="f2" contenteditable="true" data-answer="Auserwählung"></div>
+<div class="answer-field" id="f3" contenteditable="true" data-answer="Bund"></div>
+<div class="answer-field" id="f4" contenteditable="true" data-answer="Auserwähltes Volk"></div>
+<div class="answer-field" id="f5" contenteditable="true" data-answer="Abfall"></div>
+
+<div class="answer-field small" id="f6" contenteditable="true"
+     data-answer="Zerstörung des auserwählten Volkes durch die Heiden"></div>
+
+<div class="answer-field" id="f7" contenteditable="true"
+     data-answer="42 Monate (3 ½)"></div>
+
+<div class="answer-field" id="f8" contenteditable="true" data-answer="Zerstörer"></div>
+<div class="answer-field" id="f9" contenteditable="true" data-answer="Gericht + Errettung"></div>
+<div class="answer-field" id="f10" contenteditable="true" data-answer="Ca. 14 Jahre"></div>
+<div class="answer-field" id="f11" contenteditable="true" data-answer="Ca. 7 Jahre"></div>
+<div class="answer-field" id="f12" contenteditable="true" data-answer="Hochzeitsfest"></div>
+
+<div class="answer-field" id="f13" contenteditable="true" data-answer="März 1966"></div>
+<div class="answer-field" id="f14" contenteditable="true" data-answer="Sept 1980"></div>
+<div class="answer-field" id="f15" contenteditable="true" data-answer="März 1984"></div>
+<div class="answer-field" id="f16" contenteditable="true" data-answer="1991"></div>
+
+<div class="answer-field small" id="f17" contenteditable="true"
+     data-answer="1:1–8 Zusammenfassung &amp; Schlussfolgerung"></div>
+<div class="answer-field small" id="f18" contenteditable="true"
+     data-answer="2, 3 Briefe"></div>
+<div class="answer-field small" id="f19" contenteditable="true"
+     data-answer="1:9–20 Auserwählung des neuen Johannes"></div>
+<div class="answer-field small" id="f20" contenteditable="true"
+     data-answer="4, 5 Geistliche Welt"></div>
+
+<div class="answer-field vertical rotated" id="f21" contenteditable="true"
+     data-answer="Tempel des Zeltes"></div>
+<div class="answer-field vertical rotated" id="f22" contenteditable="true"
+     data-answer="Isaak Gemeinde"></div>
+
+<div class="answer-field" id="f23" contenteditable="true" data-answer="6"></div>
+<div class="answer-field" id="f24" contenteditable="true" data-answer="7"></div>
+
+<div class="answer-field" id="f25" contenteditable="true" data-answer="8, 9"></div>
+<div class="answer-field" id="f26" contenteditable="true" data-answer="Posaunen"></div>
+
+<div class="answer-field" id="f27" contenteditable="true" data-answer="10"></div>
+<div class="answer-field" id="f28" contenteditable="true" data-answer="Offenbarung"></div>
+
+<div class="answer-field" id="f29" contenteditable="true" data-answer="11"></div>
+<div class="answer-field" id="f30" contenteditable="true" data-answer="Zeuge"></div>
+
+<div class="answer-field" id="f31" contenteditable="true" data-answer="12, 13"></div>
+<div class="answer-field" id="f32" contenteditable="true" data-answer="Krieg"></div>
+
+<div class="answer-field" id="f33" contenteditable="true" data-answer="16 Schalen"></div>
+<div class="answer-field" id="f34" contenteditable="true" data-answer="17 Hure"></div>
+<div class="answer-field" id="f35" contenteditable="true" data-answer="18 Babylon"></div>
+
+<div class="answer-field" id="f36" contenteditable="true" data-answer="19 Hochzeit"></div>
+<div class="answer-field" id="f37" contenteditable="true" data-answer="20 Auferstehung"></div>
+<div class="answer-field" id="f38" contenteditable="true" data-answer="21 Ewiges Leben"></div>
+<div class="answer-field" id="f39" contenteditable="true" data-answer="22 Heilung"></div>
+
+<div class="answer-field" id="f40" contenteditable="true" data-answer="14, 15"></div>
+<div class="answer-field tiny" id="f41" contenteditable="true"
+     data-answer="Tempel des Zeltes des Zeugnisses"></div>
+
+</div>
+</div>
+
+<div class="instruction">
+  Gib die Antwort in das leere Feld ein.
+  Beim <strong>1. Fehler</strong> wird das Feld rot.
+  Beim <strong>2. Fehler</strong> wird die richtige Antwort angezeigt.
+  Sind alle Felder abgeschlossen, kannst du mit Reset neu beginnen.
+</div>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/Offenbarung-Lernspiel/service-worker.js");
+}
+
+const fields = [...document.querySelectorAll(".answer-field")];
+const rightEl = document.getElementById("right");
+const wrongEl = document.getElementById("wrong");
+const resetBtn = document.getElementById("resetBtn");
+
+/* Exact positions from the user's final blank template, in percent of the board. */
+const POS = {
+  f1:[5.2,6.6,14.4,6.3],
+
+  f2:[1.6,14.1,9.0,7.2],
+  f3:[12.2,14.1,8.9,7.2],
+  f4:[13.7,22.8,7.1,7.4],
+  f5:[21.2,22.9,9.2,7.0],
+
+  f6:[31.9,14.2,19.8,11.8],
+  f7:[33.9,26.9,16.0,5.4],
+
+  f8:[65.2,20.2,8.9,6.3],
+  f9:[74.6,16.7,23.3,8.2],
+  f10:[15.4,31.2,12.1,4.0],
+  f11:[61.2,28.6,11.7,5.8],
+  f12:[83.5,28.5,13.4,6.5],
+
+  f13:[4.8,39.4,11.7,5.6],
+  f14:[25.3,39.4,11.7,5.6],
+  f15:[47.5,39.4,10.2,5.6],
+  f16:[75.0,39.4,7.1,5.6],
+
+  f17:[1.9,49.8,10.9,10.2],
+  f18:[13.6,49.8,9.9,10.2],
+  f19:[1.9,61.8,10.9,10.2],
+  f20:[13.6,61.8,9.9,10.2],
+
+  /* For rotated vertical text, use the desired final visible bounding box. */
+  f21:[22.9,47.2,4.2,23.2],
+  f22:[32.7,47.2,4.2,23.2],
+
+  f23:[26.4,72.0,4.8,6.0],
+  f24:[35.1,72.0,4.8,6.0],
+
+  f25:[37.1,47.5,9.0,5.3],
+  f26:[45.8,47.5,10.2,5.3],
+  f27:[37.1,52.6,9.0,5.3],
+  f28:[45.8,52.6,10.2,5.3],
+  f29:[37.1,57.8,9.0,5.3],
+  f30:[45.8,57.8,10.2,5.3],
+  f31:[37.1,63.0,9.0,5.3],
+  f32:[45.8,63.0,10.2,5.3],
+
+  f33:[59.2,48.4,12.2,6.2],
+  f34:[59.2,54.6,12.2,6.2],
+  f35:[59.2,60.7,15.0,6.2],
+
+  f36:[82.5,44.4,14.0,6.0],
+  f37:[82.5,51.3,14.0,6.0],
+  f38:[82.5,58.2,14.0,6.0],
+  f39:[82.5,65.1,14.0,6.0],
+
+  f40:[47.0,89.5,14.8,5.4],
+  f41:[64.6,88.5,21.1,6.7]
+};
+
+for (const [id,p] of Object.entries(POS)) {
+  const f = document.getElementById(id);
+
+  if (id === "f21" || id === "f22") {
+    /*
+      Final visible box is p = [x,y,w,h].
+      Pre-rotation dimensions are swapped so the rotated hit area matches
+      the original narrow vertical template box.
+    */
+    const x=p[0], y=p[1], w=p[2], h=p[3];
+    f.style.left = (x - (h-w)/2) + "%";
+    f.style.top = (y + (h-w)/2) + "%";
+    f.style.width = h + "%";
+    f.style.height = w + "%";
+  } else {
+    f.style.left = p[0] + "%";
+    f.style.top = p[1] + "%";
+    f.style.width = p[2] + "%";
+    f.style.height = p[3] + "%";
+  }
+}
+
+let right = 0;
+let wrong = 0;
+
+function normalize(v) {
+  return (v || "")
+    .replace(/\u00a0/g, " ")
+    .replace(/\n/g, " ")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/[.,:;!?·•~～'"“”‘’]/g, "")
+    .replace(/[＋+]/g, "+")
+    .replace(/[()（）]/g, "")
+    .replace(/–/g, "-");
+}
+
+function isCorrect(field) {
+  const entered = normalize(field.innerText);
+  const answer = normalize(field.dataset.answer);
+
+  if (entered === answer) return true;
+
+  if (field.id === "f7") {
+    return entered === normalize("42 Monate") ||
+           entered === normalize("42 Monate (3 ½)") ||
+           entered === normalize("42 Monate (3 1/2)");
+  }
+
+  if (field.id === "f10") {
+    return entered === normalize("Ca. 14 Jahre") ||
+           entered === normalize("14 Jahre");
+  }
+
+  if (field.id === "f11") {
+    return entered === normalize("Ca. 7 Jahre") ||
+           entered === normalize("7 Jahre");
+  }
+
+  if (field.id === "f19") {
+    return [
+      "neuer Johannes",
+      "neuen Johannes",
+      "Auserwählung des neuen Johannes"
+    ].map(normalize).includes(entered);
+  }
+
+  if (field.id === "f21") {
+    return ["Tempel des Zeltes"].map(normalize).includes(entered);
+  }
+
+  return false;
+}
+
+function fitText(field) {
+  const base = parseFloat(getComputedStyle(field).fontSize);
+  let size = isFinite(base) ? base : 16;
+  const min = field.classList.contains("tiny") ? 7 :
+              field.classList.contains("small") ? 8 : 9;
+
+  field.style.fontSize = size + "px";
+
+  /* Prevent very long entries from clipping. */
+  let guard = 0;
+  while (guard < 24 &&
+         (field.scrollHeight > field.clientHeight + 1 ||
+          field.scrollWidth > field.clientWidth + 1) &&
+         size > min) {
+    size -= 0.5;
+    field.style.fontSize = size + "px";
+    guard++;
+  }
+}
+
+function updateUI() {
+  rightEl.textContent = right;
+  wrongEl.textContent = wrong;
+  resetBtn.classList.toggle("show", fields.every(f => f.dataset.locked === "1"));
+}
+
+function finishField(field) {
+  field.dataset.locked = "1";
+  field.contentEditable = "false";
+  field.classList.add("locked");
+  fitText(field);
+}
+
+function checkField(field) {
+  if (field.dataset.locked === "1") return;
+  if (!field.innerText.trim()) return;
+
+  field.attempts = Number(field.dataset.attempts || 0);
+
+  if (isCorrect(field)) {
+    field.classList.remove("wrong", "revealed");
+    field.classList.add("correct");
+    right++;
+    finishField(field);
+    updateUI();
+    return;
+  }
+
+  field.attempts++;
+  field.dataset.attempts = String(field.attempts);
+  wrong++;
+  field.classList.remove("correct");
+  field.classList.add("wrong");
+  fitText(field);
+
+  if (field.attempts >= 2) {
+    field.innerText = field.dataset.answer;
+    field.classList.remove("wrong");
+    field.classList.add("revealed");
+    finishField(field);
+  }
+
+  updateUI();
+}
+
+fields.forEach(field => {
+  field.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      checkField(field);
+    }
+  });
+
+  field.addEventListener("blur", () => checkField(field));
+
+  field.addEventListener("input", () => {
+    if (field.dataset.locked !== "1") fitText(field);
+  });
+
+  field.addEventListener("paste", () => {
+    setTimeout(() => fitText(field), 0);
+  });
+});
+
+resetBtn.addEventListener("click", () => {
+  right = 0;
+  wrong = 0;
+
+  fields.forEach(field => {
+    field.innerText = "";
+    field.dataset.attempts = "0";
+    field.dataset.locked = "0";
+    field.contentEditable = "true";
+    field.classList.remove("wrong", "correct", "revealed", "locked");
+    field.style.fontSize = "";
+  });
+
+  updateUI();
+});
+
+updateUI();
+</script>
+</body>
+</html>
