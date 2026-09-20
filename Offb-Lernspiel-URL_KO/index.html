@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffffff">
+<title>요한계시록 학습 게임</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#f3f3f3;font-family:Arial,"Noto Sans KR","Noto Sans CJK KR",sans-serif}
+body{min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.topbar{width:min(1536px,100vw);display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;background:#fff;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.title{font-size:clamp(15px,2vw,23px);font-weight:800}
+.score{font-size:clamp(12px,1.45vw,17px);white-space:nowrap}
+#resetBtn{display:none;border:1px solid #aaa;border-radius:10px;background:#fff;color:#222;padding:8px 12px;font-size:clamp(12px,1.45vw,16px);font-weight:800;cursor:pointer}
+#resetBtn.show{display:inline-block}
+.board-wrap{width:min(1536px,100vw)}
+.board{position:relative;width:100%;aspect-ratio:1536/864;background:#fff url("vorlage.png") center/100% 100% no-repeat;overflow:hidden}
+.answer-field{
+  position:absolute;
+  z-index:20;
+  margin:0;
+  padding:2px 4px;
+  border:0;
+  outline:none;
+  background:transparent;
+  color:#222;
+  text-align:center;
+  font-family:"Noto Sans KR","Noto Sans CJK KR",Arial,sans-serif;
+  font-weight:800;
+  font-size:clamp(9px,1.22vw,18px);
+  line-height:1.08;
+  border-radius:3px;
+  cursor:text;
+  pointer-events:auto;
+}
+.answer-field:focus{background:rgba(255,255,255,.78)}
+.answer-field.wrong{background:rgba(249,218,218,.96);color:#7a2222}
+.answer-field.correct{background:rgba(220,244,224,.96);color:#1f5d2a}
+.answer-field.revealed{background:rgba(255,238,204,.97);color:#7a4b00}
+.answer-field[readonly]{cursor:default}
+.vertical{writing-mode:vertical-rl;text-orientation:upright;padding:4px 0}
+.small{font-size:clamp(8px,1.0vw,15px)}
+.tiny{font-size:clamp(8px,.88vw,14px)}
+.instruction{width:min(1536px,100vw);padding:9px 10px 13px;background:#fff;color:#444;text-align:center;font-size:clamp(11px,1.3vw,15px)}
+.instruction strong{color:#7a2222}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="title">📖 요한계시록 학습 게임</div>
+  <div class="score">정답: <span id="right">0</span>　오답: <span id="wrong">0</span></div>
+  <button id="resetBtn" type="button">🔄 다시 시작 (Reset)</button>
+</div>
+
+<div class="board-wrap">
+<div class="board">
+
+<!-- 1–11: top area -->
+<input class="answer-field" id="f1"  lang="ko" autocomplete="off" spellcheck="false" data-answer="예수님">
+
+<input class="answer-field" id="f2"  lang="ko" autocomplete="off" spellcheck="false" data-answer="택함">
+<input class="answer-field" id="f3"  lang="ko" autocomplete="off" spellcheck="false" data-answer="언약">
+<input class="answer-field" id="f4"  lang="ko" autocomplete="off" spellcheck="false" data-answer="선민">
+<input class="answer-field" id="f5"  lang="ko" autocomplete="off" spellcheck="false" data-answer="배도">
+
+<input class="answer-field small" id="f6" lang="ko" autocomplete="off" spellcheck="false" data-answer="이방에 의한 선민 멸망">
+<input class="answer-field" id="f7" lang="ko" autocomplete="off" spellcheck="false" data-answer="42달(3년 반)">
+
+<input class="answer-field" id="f8"  lang="ko" autocomplete="off" spellcheck="false" data-answer="멸망자">
+<input class="answer-field" id="f9"  lang="ko" autocomplete="off" spellcheck="false" data-answer="심판+구원">
+<input class="answer-field" id="f10" lang="ko" autocomplete="off" spellcheck="false" data-answer="약 7년">
+<input class="answer-field" id="f11" lang="ko" autocomplete="off" spellcheck="false" data-answer="혼인잔치">
+
+<!-- 12–15: dates -->
+<input class="answer-field" id="f12" lang="ko" autocomplete="off" spellcheck="false" data-answer="1966.3">
+<input class="answer-field" id="f13" lang="ko" autocomplete="off" spellcheck="false" data-answer="1980.9">
+<input class="answer-field" id="f14" lang="ko" autocomplete="off" spellcheck="false" data-answer="1984.3">
+<input class="answer-field" id="f15" lang="ko" autocomplete="off" spellcheck="false" data-answer="1991">
+
+<!-- 16–19: lower left -->
+<input class="answer-field small" id="f16" lang="ko" autocomplete="off" spellcheck="false" data-answer="1:1~8 요약과 결론">
+<input class="answer-field small" id="f17" lang="ko" autocomplete="off" spellcheck="false" data-answer="2,3장 편지">
+<input class="answer-field small" id="f18" lang="ko" autocomplete="off" spellcheck="false" data-answer="1:9~20 새요한의 택함">
+<input class="answer-field small" id="f19" lang="ko" autocomplete="off" spellcheck="false" data-answer="4,5장 영계">
+
+<!-- 20–21: vertical boxes -->
+<input class="answer-field vertical" id="f20" lang="ko" autocomplete="off" spellcheck="false" data-answer="성막성전">
+<input class="answer-field vertical" id="f21" lang="ko" autocomplete="off" spellcheck="false" data-answer="이삭교회">
+
+<!-- 22–23: small 6 / 7 boxes -->
+<input class="answer-field" id="f22" lang="ko" autocomplete="off" spellcheck="false" data-answer="6">
+<input class="answer-field" id="f23" lang="ko" autocomplete="off" spellcheck="false" data-answer="7">
+
+<!-- 24–31: chapter / label grid -->
+<input class="answer-field" id="f24" lang="ko" autocomplete="off" spellcheck="false" data-answer="8,9장">
+<input class="answer-field" id="f25" lang="ko" autocomplete="off" spellcheck="false" data-answer="나팔">
+
+<input class="answer-field" id="f26" lang="ko" autocomplete="off" spellcheck="false" data-answer="10장">
+<input class="answer-field" id="f27" lang="ko" autocomplete="off" spellcheck="false" data-answer="계시">
+
+<input class="answer-field" id="f28" lang="ko" autocomplete="off" spellcheck="false" data-answer="11장">
+<input class="answer-field" id="f29" lang="ko" autocomplete="off" spellcheck="false" data-answer="증인">
+
+<input class="answer-field" id="f30" lang="ko" autocomplete="off" spellcheck="false" data-answer="12,13장">
+<input class="answer-field" id="f31" lang="ko" autocomplete="off" spellcheck="false" data-answer="전쟁">
+
+<!-- 32–34: 16–18 -->
+<input class="answer-field" id="f32" lang="ko" autocomplete="off" spellcheck="false" data-answer="16장 대접">
+<input class="answer-field" id="f33" lang="ko" autocomplete="off" spellcheck="false" data-answer="17장 음녀">
+<input class="answer-field" id="f34" lang="ko" autocomplete="off" spellcheck="false" data-answer="18장 바벨론">
+
+<!-- 35–38: 19–22 -->
+<input class="answer-field" id="f35" lang="ko" autocomplete="off" spellcheck="false" data-answer="혼인">
+<input class="answer-field" id="f36" lang="ko" autocomplete="off" spellcheck="false" data-answer="부활">
+<input class="answer-field" id="f37" lang="ko" autocomplete="off" spellcheck="false" data-answer="영생">
+<input class="answer-field" id="f38" lang="ko" autocomplete="off" spellcheck="false" data-answer="소성">
+
+<!-- 39–40: bottom -->
+<input class="answer-field" id="f39" lang="ko" autocomplete="off" spellcheck="false" data-answer="14,15장">
+<input class="answer-field tiny" id="f40" lang="ko" autocomplete="off" spellcheck="false" data-answer="증거장막성전">
+
+</div>
+</div>
+
+<div class="instruction">
+  빈칸에 정답을 입력하세요. 1번 틀리면 <strong>빨간색</strong>으로 표시되고,
+  2번 틀리면 <strong>정답이 표시됩니다.</strong> 모든 칸을 완료하면 Reset으로 다시 시작할 수 있습니다.
+</div>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/Offenbarung-Lernspiel/service-worker.js");
+}
+
+const fields = [...document.querySelectorAll(".answer-field")];
+const rightEl = document.getElementById("right");
+const wrongEl = document.getElementById("wrong");
+const resetBtn = document.getElementById("resetBtn");
+
+let right = 0;
+let wrong = 0;
+
+const POS = {
+f1:[5.3,4.5,14.2,6.1],
+f2:[1.7,12.4,9.0,8.8],
+f3:[12.5,12.4,8.8,7.6],
+f4:[14.4,21.8,6.9,7.6],
+f5:[21.5,21.8,9.6,6.8],
+f6:[33.0,12.8,19.3,13.1],
+f7:[33.1,34.3,19.7,3.9],
+f8:[65.9,19.6,9.2,6.0],
+f9:[76.0,15.7,22.8,8.2],
+f10:[62.5,28.0,10.7,6.0],
+f11:[84.1,28.0,12.6,6.0],
+
+f12:[4.7,38.0,12.0,5.9],
+f13:[26.5,38.0,10.8,5.9],
+f14:[48.6,38.0,10.8,5.9],
+f15:[76.0,38.0,6.7,5.9],
+
+f16:[2.0,48.6,11.3,10.9],
+f17:[13.7,48.6,9.6,10.9],
+f18:[2.0,60.7,11.3,10.9],
+f19:[13.7,60.7,9.6,10.9],
+
+f20:[24.0,44.8,4.8,25.3],
+f21:[33.4,44.8,4.7,25.3],
+
+f22:[26.7,71.7,4.7,6.0],
+f23:[36.8,71.7,4.7,6.0],
+
+f24:[38.5,45.9,8.6,5.3],
+f25:[46.8,45.9,9.9,5.3],
+f26:[38.5,51.1,8.6,5.3],
+f27:[46.8,51.1,9.9,5.3],
+f28:[38.5,56.2,8.6,5.3],
+f29:[46.8,56.2,9.9,5.3],
+f30:[38.5,61.3,8.6,5.3],
+f31:[46.8,61.3,9.9,5.3],
+
+f32:[61.1,46.0,11.5,6.1],
+f33:[61.1,52.2,11.5,6.0],
+f34:[61.1,58.3,14.2,6.0],
+
+f35:[83.2,42.6,13.7,6.1],
+f36:[83.2,49.0,13.7,6.1],
+f37:[83.2,56.4,13.7,6.1],
+f38:[83.2,63.8,13.7,6.1],
+
+f39:[48.5,89.0,14.8,5.4],
+f40:[65.7,87.8,20.7,6.7]
+};
+
+for (const [id,p] of Object.entries(POS)) {
+  const f=document.getElementById(id);
+  f.style.left=p[0]+"%";
+  f.style.top=p[1]+"%";
+  f.style.width=p[2]+"%";
+  f.style.height=p[3]+"%";
+}
+
+function normalize(v) {
+  return (v||"").trim().toLowerCase()
+    .replace(/\s+/g,"")
+    .replace(/[.,:;!?·•~～'"“”‘’]/g,"")
+    .replace(/[＋+]/g,"+")
+    .replace(/[()（）]/g,"");
+}
+
+function isCorrect(field) {
+  const entered = normalize(field.value);
+  const answer = normalize(field.dataset.answer);
+
+  if (entered === answer) return true;
+
+  // Common variants for the source diagram.
+  if (field.id==="f7" && entered===normalize("42달 3년반")) return true;
+  if (field.id==="f24" && entered===normalize("8, 9장")) return true;
+  if (field.id==="f30" && entered===normalize("12, 13장")) return true;
+  if (field.id==="f35" && entered===normalize("19장 혼인")) return true;
+  if (field.id==="f36" && entered===normalize("20장 부활")) return true;
+  if (field.id==="f37" && entered===normalize("21장 영생")) return true;
+  if (field.id==="f38" && entered===normalize("22장 소성")) return true;
+
+  return false;
+}
+
+function updateUI() {
+  rightEl.textContent=right;
+  wrongEl.textContent=wrong;
+  resetBtn.classList.toggle("show", fields.every(f=>f.readOnly));
+}
+
+function checkField(field) {
+  if (field.readOnly || !field.value.trim()) return;
+
+  field.attempts = field.attempts || 0;
+
+  if (isCorrect(field)) {
+    field.classList.remove("wrong","revealed");
+    field.classList.add("correct");
+    field.readOnly=true;
+    right++;
+    updateUI();
+    return;
+  }
+
+  field.attempts++;
+  wrong++;
+  field.classList.remove("correct");
+  field.classList.add("wrong");
+
+  if (field.attempts>=2) {
+    field.value=field.dataset.answer;
+    field.classList.remove("wrong");
+    field.classList.add("revealed");
+    field.readOnly=true;
+  }
+
+  updateUI();
+}
+
+fields.forEach(field=>{
+  field.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){
+      e.preventDefault();
+      checkField(field);
+    }
+  });
+  field.addEventListener("blur",()=>checkField(field));
+});
+
+resetBtn.addEventListener("click",()=>{
+  right=0;
+  wrong=0;
+  fields.forEach(field=>{
+    field.value="";
+    field.readOnly=false;
+    field.attempts=0;
+    field.classList.remove("wrong","correct","revealed");
+  });
+  updateUI();
+});
+
+updateUI();
+</script>
+</body>
+</html>
