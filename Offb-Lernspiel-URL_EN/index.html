@@ -105,8 +105,8 @@ body{
 .instruction strong{color:#7a2222}
 .back-button{
   position:fixed;
-  top:6px;
-  left:500px;
+  top:4px;
+  left:25px;
   z-index:9999;
   padding:10px 12px;
   border-radius:10px;
@@ -129,7 +129,7 @@ body{
 <a href="../" class="back-button">🍀Main Menu🍀</a>
   
 <div class="topbar">
-  <div class="title">📖 Revelation Learning Game</div>
+  <div class="title"></div>
   <div class="score">Correct: <span id="right">0</span>　Wrong: <span id="wrong">0</span></div>
   <button id="resetBtn" type="button">🔄 Restart (Reset)</button>
 </div>
@@ -175,7 +175,7 @@ body{
 
 <!-- Vertical labels -->
 <div class="answer-field vertical" id="f21" contenteditable="true"
-     data-answer="Temple of the"></div>
+     data-answer="Temple of the Tabernacle"></div>
 <div class="answer-field vertical" id="f22" contenteditable="true"
      data-answer="Isaac Church"></div>
 
@@ -210,7 +210,7 @@ body{
 <!-- Bottom -->
 <div class="answer-field" id="f40" contenteditable="true" data-answer="14, 15"></div>
 <div class="answer-field tiny" id="f41" contenteditable="true"
-     data-answer="Temple of the Tabernacle"></div>
+     data-answer="Temple of the Tabernacle of the Testimony"></div>
 
 </div>
 </div>
@@ -235,7 +235,7 @@ const resetBtn=document.getElementById("resetBtn");
 let right=0, wrong=0;
 
 const POS={
-  f1:[5.2,4.6,14.4,6.1],
+  f1:[5.2,2.6,14.4,6.1],
 
   f2:[1.6,14.1,9.0,8.0],
   f3:[12.2,14.1,8.9,8.0],
