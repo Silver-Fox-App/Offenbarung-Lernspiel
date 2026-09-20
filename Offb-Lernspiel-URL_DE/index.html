@@ -92,10 +92,31 @@ body{min-height:100vh;display:flex;flex-direction:column;align-items:center}
   font-size:clamp(11px,1.3vw,15px)
 }
 .instruction strong{color:#7a2222}
+.back-button{
+  position:fixed;
+  top:12px;
+  left:12px;
+  z-index:9999;
+  padding:10px 16px;
+  border-radius:12px;
+  background:#ffffff;
+  color:#222222;
+  text-decoration:none;
+  font-size:16px;
+  font-weight:700;
+  box-shadow:0 3px 10px rgba(0,0,0,.15);
+  border:1px solid #dddddd;
+}
+
+.back-button:active{
+  transform:scale(.97);
+}
 </style>
 </head>
 <body>
 
+<a href="../" class="back-button">← Hauptmenü</a>
+  
 <div class="topbar">
   <div class="title">📖 Offenbarungs-Lernspiel</div>
   <div class="score">Richtig: <span id="right">0</span>　Falsch: <span id="wrong">0</span></div>
