@@ -8,7 +8,10 @@ const FILES_TO_CACHE = [
   "/Offenbarung-Lernspiel/Offb-Lernspiel-URL_DE/vorlage.png",
 
   "/Offenbarung-Lernspiel/Offb-Lernspiel-URL_EN/index.html",
-  "/Offenbarung-Lernspiel/Offb-Lernspiel-URL_EN/vorlage.png"
+  "/Offenbarung-Lernspiel/Offb-Lernspiel-URL_EN/vorlage.png",
+
+   "/Offenbarung-Lernspiel/Offb-Lernspiel-URL_KO/index.html",
+  "/Offenbarung-Lernspiel/Offb-Lernspiel-URL_KO/vorlage.png"
 ];
 
 self.addEventListener("install", event => {
