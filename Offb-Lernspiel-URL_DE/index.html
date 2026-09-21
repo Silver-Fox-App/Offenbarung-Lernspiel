@@ -445,6 +445,33 @@ resetBtn.addEventListener("click", () => {
 });
 
 updateUI();
+
+function keepFieldVisible(field) {
+  setTimeout(() => {
+    field.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest"
+    });
+  }, 350);
+}
+
+fields.forEach(field => {
+  field.addEventListener("focus", () => {
+    keepFieldVisible(field);
+  });
+});
+
+if (window.visualViewport) {
+  visualViewport.addEventListener("resize", () => {
+    const active = document.activeElement;
+
+    if (active && active.classList.contains("answer-field")) {
+      keepFieldVisible(active);
+    }
+  });
+}
+
 </script>
 </body>
 </html>
