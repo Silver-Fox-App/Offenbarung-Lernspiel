@@ -111,6 +111,28 @@ body{min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .back-button:active{
   transform:scale(.97);
 }
+
+/* Smartphone-Hochformat: Spielfeld lesbarer machen */
+@media (orientation: portrait) {
+
+  .board-wrap {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .board {
+    min-width: 850px;
+  }
+
+  .answer-field {
+    scroll-margin-top: 90px;
+    scroll-margin-bottom: 160px;
+  }
+}
+  
 </style>
 </head>
 <body>
